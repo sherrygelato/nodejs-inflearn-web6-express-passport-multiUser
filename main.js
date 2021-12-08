@@ -8,6 +8,8 @@ app.use(helmet());
 
 var session = require('express-session')
 var FileStore = require('session-file-store')(session);
+var LowdbStore = require("lowdb-session-store")(session);
+var db = require('./lib/db')
 var flash = require('connect-flash')
 
 app.use(express.static('public'));
@@ -20,7 +22,10 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  store: new FileStore()
+  // store: new FileStore()
+  store: new LowdbStore(db.get('sessions'), {
+    ttl: 86400
+  })
 }))
 app.use(flash())
 

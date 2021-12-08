@@ -58,45 +58,45 @@ module.exports = function (passport) {
   //   })
   // );
 
-  // // session에 정보가 저장되지 않았음에도 불구 리디렉션
-  // router.post('/login_process',
-  //   passport.authenticate('local', {
-  //     failureRedirect: '/auth/login'
-  //   }), (req, res) => {
-  //     req.session.save(() => {
-  //       res.redirect('/')
-  //     })
-  // })
-
-  // 메모리에 있는 session 정보가 redirect되기 전에 파일로 기록되지 않은 문제
-  router.post('/login_process', function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        req.flash('error', info.message);
-        return req.session.save(function (err) {
-          if (err) {
-            return next(err);
-          }
-          return res.redirect('/auth/login');
-        })
-      }
-      req.login(user, function (err) {
-        if (err) {
-          return next(err);
-        }
-        req.flash('success', info.message);
-        return req.session.save(function (err) {
-          if (err) {
-            return next(err);
-          }
-          return res.redirect('/');
-        });
-      });
-    })(req, res, next);
+  // session에 정보가 저장되지 않았음에도 불구 리디렉션
+  router.post('/login_process',
+    passport.authenticate('local', {
+      failureRedirect: '/auth/login'
+    }), (req, res) => {
+      req.session.save(() => {
+        res.redirect('/')
+      })
   })
+
+  // // 메모리에 있는 session 정보가 redirect되기 전에 파일로 기록되지 않은 문제
+  // router.post('/login_process', function (req, res, next) {
+  //   passport.authenticate('local', function (err, user, info) {
+  //     if (err) {
+  //       return next(err);
+  //     }
+  //     if (!user) {
+  //       req.flash('error', info.message);
+  //       return req.session.save(function (err) {
+  //         if (err) {
+  //           return next(err);
+  //         }
+  //         return res.redirect('/auth/login');
+  //       })
+  //     }
+  //     req.login(user, function (err) {
+  //       if (err) {
+  //         return next(err);
+  //       }
+  //       req.flash('success', info.message);
+  //       return req.session.save(function (err) {
+  //         if (err) {
+  //           return next(err);
+  //         }
+  //         return res.redirect('/');
+  //       });
+  //     });
+  //   })(req, res, next);
+  // })
 
   router.get('/register', function (request, response) {
     var fmsg = request.flash()
@@ -105,15 +105,15 @@ module.exports = function (passport) {
       feedback = fmsg.error[0]
     }
     console.log(fmsg)
-    var title = 'WEB - login';
+    var title = 'WEB - register';
     var list = template.list(request.list);
     var html = template.HTML(title, list, `
     <div style="color:red;">${feedback}</div>
     <form action="/auth/register_process" method="post">
-      <p><input type="text" name="email" placeholder="email" value="test1@example.com"></p>
-      <p><input type="password" name="pwd" placeholder="password" value="1234321!"></p>
-      <p><input type="password" name="pwd2" placeholder="password" value="1234321!"></p>
-      <p><input type="text" name="displayName" placeholder="displayName" value="sherry"></p>
+      <p><input type="text" name="email" placeholder="email"></p>
+      <p><input type="password" name="pwd" placeholder="password"></p>
+      <p><input type="password" name="pwd2" placeholder="password"></p>
+      <p><input type="text" name="displayName" placeholder="displayName"></p>
       <p>
         <input type="submit" value="register">
       </p>
@@ -141,8 +141,9 @@ module.exports = function (passport) {
         password: pwd,
         displayName:displayName
       }
-      db.get('users').push({user}).write()
-      request.login(user, function(err) {
+      db.get('users').push(user).write()
+      request.login(user, function (err) {
+        console.log('user redirect')
         return response.redirect('/')
       })
     }

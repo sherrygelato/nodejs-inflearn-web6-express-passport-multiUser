@@ -1,12 +1,25 @@
 {
   "users": [
     {
-      "user": {
-        "id": "9bJ7_bSWB",
-        "email": "test1@example.com",
-        "password": "1234321!",
-        "displayName": "sherry"
-      }
+      "id": "SbO-dRN37",
+      "email": "test@example.com",
+      "password": "1234321!",
+      "displayName": "sherry"
+    }
+  ],
+  "sessions": [
+    {
+      "_id": "i2wGu-g5wTcW-pZekK_wRLqru4SMZbrP",
+      "session": {
+        "cookie": {
+          "originalMaxAge": null,
+          "expires": null,
+          "httpOnly": true,
+          "path": "/"
+        },
+        "flash": {}
+      },
+      "expires": 1639017817929
     }
   ]
 }

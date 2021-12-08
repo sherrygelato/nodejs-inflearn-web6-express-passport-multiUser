@@ -31,5 +31,12 @@
     "passport-local": "^1.0.0",
     "sanitize-html": "^2.3.2",
     "session-file-store": "^1.5.0"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*",
+      "nodejs/sessions/*",
+      "db.json"
+    ]
   }
 }

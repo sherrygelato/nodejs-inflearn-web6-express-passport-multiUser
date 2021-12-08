@@ -5,6 +5,12 @@
       "email": "test@example.com",
       "password": "1234321!",
       "displayName": "sherry"
+    },
+    {
+      "id": "ioM7MAqob",
+      "email": "sherrygelato@kakao.com",
+      "password": "$2b$10$HJo1mGggGn0g9MNwgpwHqe6Z6EtaXSCJSnW1Ctumj/1tZgGch/HLa",
+      "displayName": "sherry"
     }
   ],
   "sessions": [
@@ -20,6 +26,28 @@
         "flash": {}
       },
       "expires": 1639017817929
+    },
+    {
+      "_id": "-YZZN3M8Y1eO7MNwCO6Ip0f43Mxqkkc2",
+      "session": {
+        "cookie": {
+          "originalMaxAge": null,
+          "expires": null,
+          "httpOnly": true,
+          "path": "/"
+        },
+        "flash": {},
+        "passport": {}
+      },
+      "expires": 1639027545169
+    }
+  ],
+  "topics": [
+    {
+      "id": "j-FujcklE",
+      "title": "hi",
+      "description": "hi",
+      "user_id": "ioM7MAqob"
     }
   ]
 }

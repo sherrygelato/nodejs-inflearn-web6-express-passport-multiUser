@@ -6,12 +6,7 @@ var sanitizeHtml = require('sanitize-html');
 var template = require('../lib/template.js');
 var shortid = require('shortid')
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync'); // 분기 방법으로 파일 저장
-const { response } = require('express');
-const adapter = new FileSync('db.json') // 해당 파일에 저장
-const db = low(adapter) // 동기화 된 방식으로 처리 
-db.defaults({users:[]}).write() // user에 넣어줘~
+var db = require('../lib/db')
 
 module.exports = function (passport) {
   router.get('/login', function (request, response) {
@@ -110,15 +105,18 @@ module.exports = function (passport) {
       request.flash('error', 'Password Must Same!')
       response.redirect('/auth/register')
     } else {
-      db.get('users').push({
-      id: shortid.generate(),
-      email: email,
-      password: pwd,
-      displayName:displayName
-    }).write()
-    response.redirect('/')
+      var user = {
+        id: shortid.generate(),
+        email: email,
+        password: pwd,
+        displayName:displayName
+      }
+      db.get('users').push({user}).write()
+      request.login(user, function(err) {
+        return response.redirect('/')
+      })
     }
-});
+  });
   
   // destroy : 세션이 삭제됨
   router.get('/logout', function (request, response) {

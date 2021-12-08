@@ -1,15 +1,12 @@
 {
   "users": [
     {
-      "email": "test1@example.com",
-      "password": "1234321!",
-      "displayName": "sherry"
-    },
-    {
-      "id": "5cCtqQLSy",
-      "email": "test1@example.com",
-      "password": "1234321!",
-      "displayName": "sherry"
+      "user": {
+        "id": "rvbTB4TC0",
+        "email": "test1@example.com",
+        "password": "1234321!",
+        "displayName": "sherry"
+      }
     }
   ]
 }

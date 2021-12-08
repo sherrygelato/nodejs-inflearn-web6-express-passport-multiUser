@@ -5,6 +5,12 @@ var fs = require('fs');
 var sanitizeHtml = require('sanitize-html');
 var template = require('../lib/template.js');
 
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync') // 분기 방법으로 파일 저장
+const adapter = new FileSync('db.json') // 해당 파일에 저장
+const db = low(adapter) // 동기화 된 방식으로 처리 
+db.defaults({users:[]}).write() // user에 넣어줘~
+
 module.exports = function (passport) {
   router.get('/login', function (request, response) {
     var fmsg = request.flash()
@@ -77,10 +83,10 @@ module.exports = function (passport) {
     var html = template.HTML(title, list, `
     <div style="color:red;">${feedback}</div>
     <form action="/auth/register_process" method="post">
-      <p><input type="text" name="email" placeholder="email"></p>
-      <p><input type="password" name="pwd" placeholder="password"></p>
-      <p><input type="password" name="pwd2" placeholder="password"></p>
-      <p><input type="text" name="displayName" placeholder="displayName"></p>
+      <p><input type="text" name="email" placeholder="email" value="test1@example.com"></p>
+      <p><input type="password" name="pwd" placeholder="password" value="1234321!"></p>
+      <p><input type="password" name="pwd2" placeholder="password" value="1234321!"></p>
+      <p><input type="text" name="displayName" placeholder="displayName" value="sherry"></p>
       <p>
         <input type="submit" value="register">
       </p>
@@ -88,6 +94,17 @@ module.exports = function (passport) {
     `, '');
     response.send(html);
   });
+
+  router.post('/register_process', function (request, response) {
+    var post = request.body;
+    var email = post.email;
+    var pwd = post.pwd;
+    var pwd2 = post.pwd2;
+    var displayName = post.displayName;
+    fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+      response.redirect(`/topic/${title}`);
+    });
+});
   
   // destroy : 세션이 삭제됨
   router.get('/logout', function (request, response) {

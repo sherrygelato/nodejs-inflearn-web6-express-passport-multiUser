@@ -26,6 +26,7 @@
     "express": "^4.16.3",
     "express-session": "^1.17.2",
     "helmet": "^3.12.1",
+    "lowdb": "^1.0.0",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
     "sanitize-html": "^2.3.2",

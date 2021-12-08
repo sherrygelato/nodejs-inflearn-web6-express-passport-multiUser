@@ -101,9 +101,12 @@ module.exports = function (passport) {
     var pwd = post.pwd;
     var pwd2 = post.pwd2;
     var displayName = post.displayName;
-    fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-      response.redirect(`/topic/${title}`);
-    });
+    db.get('users').push({
+      email: email,
+      password: pwd,
+      displayName:displayName
+    }).write()
+    response.redirect('/')
 });
   
   // destroy : 세션이 삭제됨

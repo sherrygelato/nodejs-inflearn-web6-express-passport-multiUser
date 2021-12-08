@@ -7,6 +7,14 @@
         "password": "1234321!",
         "displayName": "sherry"
       }
+    },
+    {
+      "user": {
+        "id": "iLkF8xMeS",
+        "email": "test@example.com",
+        "password": "1234321!",
+        "displayName": "sherry"
+      }
     }
   ]
 }

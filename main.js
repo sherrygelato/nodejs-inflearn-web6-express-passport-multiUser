@@ -11,6 +11,7 @@ var FileStore = require('session-file-store')(session);
 var LowdbStore = require("lowdb-session-store")(session);
 var db = require('./lib/db')
 var flash = require('connect-flash')
+var db = require('./lib/db')
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
@@ -56,11 +57,9 @@ var passport = require('./lib/passport')(app)
 //     successFlash: true
 // }));
 
-app.get('*', function(request, response, next){
-  fs.readdir('./data', function(error, filelist){
-    request.list = filelist;
-    next();
-  });
+app.get('*', function (request, response, next) {
+  request.list = db.get('topics').value();
+  next();
 });
 
 var indexRouter = require('./routes/index');

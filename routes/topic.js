@@ -61,28 +61,41 @@ router.get('/update/:pageId', function (request, response) {
     return false;
   }
 
-  var filteredId = path.parse(request.params.pageId).base;
-  fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
-    var title = request.params.pageId;
-    var list = template.list(request.list);
-    var html = template.HTML(title, list,
-      `
-        <form action="/topic/update_process" method="post">
-          <input type="hidden" name="id" value="${title}">
-          <p><input type="text" name="title" placeholder="title" value="${title}"></p>
-          <p>
-            <textarea name="description" placeholder="description">${description}</textarea>
-          </p>
-          <p>
-            <input type="submit">
-          </p>
-        </form>
-      `,
-      `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`,
-      auth.statusUI(request, response)
-    );
-    response.send(html);
-  });
+  // var filteredId = path.parse(request.params.pageId).base;
+  // fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
+  
+  var topic = db.get('topics').find({
+    id: request.params.pageId
+  }).value();
+  console.log(topic)
+
+  if (topic.user_id !== request.user.id) {
+    request.flash('error','Not yours!')
+    return response.redirect('/')
+  }
+
+  var title = post.title;
+  var description = post.description;
+  
+  var list = template.list(request.list);
+  var html = template.HTML(title, list,
+    `
+      <form action="/topic/update_process" method="post">
+        <input type="hidden" name="id" value="${topic.id}">
+        <p><input type="text" name="title" placeholder="title" value="${title}"></p>
+        <p>
+          <textarea name="description" placeholder="description">${description}</textarea>
+        </p>
+        <p>
+          <input type="submit">
+        </p>
+      </form>
+    `,
+    `<a href="/topic/create">create</a> <a href="/topic/update/${topic.id}">update</a>`,
+    auth.statusUI(request, response)
+  );
+  response.send(html);
+  // });
 });
 
 router.post('/update_process', function (request, response) {
@@ -96,11 +109,29 @@ router.post('/update_process', function (request, response) {
   var id = post.id;
   var title = post.title;
   var description = post.description;
-  fs.rename(`data/${id}`, `data/${title}`, function(error){
-    fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-      response.redirect(`/topic/${title}`);
-    })
-  });
+
+  var topic = db.get('topics').find({
+    id: id
+  }).value();
+  console.log(topic)
+
+  if (topic.user_id !== request.user.id) {
+    request.flash('error','Not yours!')
+    return response.redirect('/')
+  }
+  db.get('topics').find({ id: id }).assign({ // update
+    title: title,
+    description: description
+  }).write();
+  response.redirect(`/topic/${topic.id}`)
+
+  response.send('hi')
+
+  // fs.rename(`data/${id}`, `data/${title}`, function(error){
+  //   fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+  //     response.redirect(`/topic/${title}`);
+  //   })
+  // });
 });
 
 router.post('/delete_process', function (request, response) {
@@ -144,7 +175,7 @@ router.get('/:pageId', function (request, response, next) {
     <p>by ${user.displayName}</p>
     `,
     ` <a href="/topic/create">create</a>
-      <a href="/topic/update/${sanitizedTitle}">update</a>
+      <a href="/topic/update/${topic.id}">update</a>
       <form action="/topic/delete_process" method="post">
         <input type="hidden" name="id" value="${sanitizedTitle}">
         <input type="submit" value="delete">

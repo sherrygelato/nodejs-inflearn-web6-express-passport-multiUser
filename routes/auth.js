@@ -58,14 +58,44 @@ module.exports = function (passport) {
   //   })
   // );
 
-  // session에 정보가 저장되지 않았음에도 불구 리디렉션
-  router.post('/login_process',
-    passport.authenticate('local', {
-      failureRedirect: '/auth/login'
-    }), (req, res) => {
-      req.session.save(() => {
-        res.redirect('/')
-      })
+  // // session에 정보가 저장되지 않았음에도 불구 리디렉션
+  // router.post('/login_process',
+  //   passport.authenticate('local', {
+  //     failureRedirect: '/auth/login'
+  //   }), (req, res) => {
+  //     req.session.save(() => {
+  //       res.redirect('/')
+  //     })
+  // })
+
+  // 메모리에 있는 session 정보가 redirect되기 전에 파일로 기록되지 않은 문제
+  router.post('/login_process', function (req, res, next) {
+    passport.authenticate('local', function (err, user, info) {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        req.flash('error', info.message);
+        return req.session.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          return res.redirect('/auth/login');
+        })
+      }
+      req.login(user, function (err) {
+        if (err) {
+          return next(err);
+        }
+        req.flash('success', info.message);
+        return req.session.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          return res.redirect('/');
+        });
+      });
+    })(req, res, next);
   })
 
   router.get('/register', function (request, response) {

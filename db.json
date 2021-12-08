@@ -2,16 +2,8 @@
   "users": [
     {
       "user": {
-        "id": "rvbTB4TC0",
+        "id": "9bJ7_bSWB",
         "email": "test1@example.com",
-        "password": "1234321!",
-        "displayName": "sherry"
-      }
-    },
-    {
-      "user": {
-        "id": "iLkF8xMeS",
-        "email": "test@example.com",
         "password": "1234321!",
         "displayName": "sherry"
       }
